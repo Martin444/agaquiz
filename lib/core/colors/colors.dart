@@ -11,4 +11,5 @@ class AqColors {
   );
 
   static var text_withe_title1 = const Color(0xffffffff);
+  static var bg_button_black = const Color(0xff393B43);
 }

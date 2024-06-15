@@ -8,4 +8,9 @@ class AqTextStyle {
     fontSize: 48,
     fontWeight: FontWeight.bold,
   );
+  static var textButtonStyle = GoogleFonts.poppins(
+    color: AqColors.text_withe_title1,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
 }
