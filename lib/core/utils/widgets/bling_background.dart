@@ -16,7 +16,7 @@ class StarPainter extends CustomPainter {
     var random = Random(animation.value.toInt());
 
     // Dibuja 100 estrellitas en posiciones aleatorias
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 65; i++) {
       var x = random.nextDouble() * size.width;
       var y = random.nextDouble() * size.height;
       drawStar(canvas, x, y, paint);

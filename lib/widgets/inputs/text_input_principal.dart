@@ -15,28 +15,42 @@ class TextInputPrincipal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      controller: controller,
-      keyboardType: inputType,
-      maxLines: maxLines,
-      style: const TextStyle(
-        fontSize: 15.0,
-        fontFamily: "Lato",
-        color: Colors.blueGrey,
-        fontWeight: FontWeight.bold,
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius:
+            BorderRadius.circular(9.0), // El mismo radio que tu InputBorder
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25), // Color de la sombra
+            spreadRadius: 1, // Extensión de la sombra
+            blurRadius: 15, // Difuminado de la sombra
+            offset: Offset(0, 11), // Posición de la sombra
+          ),
+        ],
       ),
-      decoration: InputDecoration(
-        filled: true,
-        fillColor: const Color(0xFFe5e5e5),
-        border: InputBorder.none,
-        hintText: hintText,
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFe5e5e5)),
-          borderRadius: BorderRadius.all(Radius.circular(9.0)),
+      child: TextFormField(
+        controller: controller,
+        keyboardType: inputType,
+        maxLines: maxLines,
+        style: const TextStyle(
+          fontSize: 15.0,
+          fontFamily: "Lato",
+          color: Colors.blueGrey,
+          fontWeight: FontWeight.bold,
         ),
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Color(0xFFe5e5e5)),
-          borderRadius: BorderRadius.all(Radius.circular(9.0)),
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: const Color(0xFFe5e5e5),
+          border: InputBorder.none,
+          hintText: hintText,
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFe5e5e5)),
+            borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Color(0xFFe5e5e5)),
+            borderRadius: BorderRadius.all(Radius.circular(9.0)),
+          ),
         ),
       ),
     );
