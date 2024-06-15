@@ -3,6 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 class StarPainter extends CustomPainter {
+  final Animation<double> animation;
+
+  StarPainter({required this.animation}) : super(repaint: animation);
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint();
@@ -10,7 +13,7 @@ class StarPainter extends CustomPainter {
     paint.strokeWidth = 2;
     paint.style = PaintingStyle.fill;
 
-    var random = Random();
+    var random = Random(animation.value.toInt());
 
     // Dibuja 100 estrellitas en posiciones aleatorias
     for (int i = 0; i < 100; i++) {
@@ -22,7 +25,7 @@ class StarPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 
   void drawStar(Canvas canvas, double x, double y, Paint paint) {
@@ -32,7 +35,7 @@ class StarPainter extends CustomPainter {
     const double degreesPerStep = pi / numberOfPoints;
     const double halfDegreesPerStep = degreesPerStep / 2;
     final path = Path();
-    final fullAngle = 2 * pi;
+    const fullAngle = 2 * pi;
     path.moveTo(x + cos(0) * size, y + sin(0) * size);
     for (double step = 0; step < fullAngle; step += degreesPerStep) {
       path.lineTo(x + cos(step + halfDegreesPerStep) * halfSize,
