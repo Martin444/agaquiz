@@ -35,6 +35,7 @@ void main() async {
             projectId: "pregunta2-fc6ff",
           ),
         );
+        print(e.code);
         print(e.message);
       }
     }
