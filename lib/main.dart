@@ -1,12 +1,9 @@
-import 'package:agaquiz/features/Login/controllers/login_controller.dart';
 import 'package:agaquiz/features/Login/presentation/page/login_page.dart';
-import 'package:agaquiz/features/admin/controllers/admin_controller.dart';
 import 'package:agaquiz/features/admin/presentation/admin_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 
 void main() async {
   try {
@@ -36,13 +33,10 @@ void main() async {
             projectId: "pregunta2-fc6ff",
           ),
         );
-        print(e.code);
-        print(e.message);
       }
     }
     runApp(const MyApp());
   } catch (e) {
-    print('Error firebase initialize');
     var firebaseError = (e as FirebaseException);
     print(firebaseError.code);
   }

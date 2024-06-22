@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 
 class AqColors {
@@ -11,7 +13,7 @@ class AqColors {
   );
 
   static var text_withe_title1 = const Color(0xffffffff);
-  static var text_black_btn1 = Color(0xFF000000);
+  static var text_black_btn1 = const Color(0xFF000000);
   static var bg_button_black = const Color(0xff393B43);
   static var bg_button_white = const Color(0xffffffff);
 }

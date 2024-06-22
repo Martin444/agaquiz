@@ -1,11 +1,9 @@
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
-import 'package:agaquiz/features/Login/controllers/login_controller.dart';
 import 'package:agaquiz/widgets/buttons/button_primary.dart';
 import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
