@@ -1,3 +1,4 @@
+import 'package:agaquiz/features/admin/model/qa_model.dart';
 import 'package:agaquiz/features/admin/model/quiz_model.dart';
 import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,5 +42,38 @@ class AdminController extends StateNotifier<AdminState> {
       print('ERROR DE FIREBASEE');
       print(e.toString());
     }
+  }
+
+  void addQuestion() {
+    var quizable = state.listQuestion;
+
+    quizable!.add(
+      QuestionAndAnswer(
+        index: 0,
+        question: 'pregunta ${state.listQuestion!.length + 1}',
+        answers: [],
+      ),
+    );
+
+    state = AdminState(
+      listQuestion: quizable,
+    );
+  }
+
+  void addAnswer(int indexQuestion) {
+    if (state.listQuestion == null ||
+        indexQuestion >= state.listQuestion!.length) {
+      // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
+      return;
+    }
+    var questions = state.listQuestion;
+    var currentQuestion = questions![indexQuestion];
+    var answers = currentQuestion.answers;
+
+    answers.add('Respuesta #${answers.length + 1}');
+
+    state = AdminState(
+      listQuestion: questions,
+    );
   }
 }

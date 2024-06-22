@@ -2,6 +2,8 @@ import 'package:agaquiz/core/colors/colors.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
 import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
+import 'package:agaquiz/widgets/buttons/button_primary.dart';
+import 'package:agaquiz/widgets/buttons/button_secundary.dart';
 import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,6 +14,7 @@ class AdminPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var adminController = ref.watch(adminStateProvider);
+    var adminfunctions = ref.watch(adminStateProvider.notifier);
 
     return Scaffold(
       body: Container(
@@ -67,37 +70,79 @@ class AdminPage extends ConsumerWidget {
                                 height: 20,
                               ),
                               ...adminController.listQuestion![index].answers
-                                  .map((element) {
-                                return Column(
-                                  children: [
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Checkbox(
-                                          value: false,
-                                          onChanged: (state) {},
-                                        ),
-                                        Flexible(
-                                          child: TextInputPrincipal(
-                                            hintText: 'Escribe tu respuesta',
-                                            inputType: TextInputType.name,
-                                            controller: TextEditingController(
-                                              text: element,
+                                  .map(
+                                (element) {
+                                  return Column(
+                                    children: [
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Checkbox(
+                                            value: false,
+                                            onChanged: (state) {},
+                                          ),
+                                          Flexible(
+                                            child: TextInputPrincipal(
+                                              hintText: 'Escribe tu respuesta',
+                                              inputType: TextInputType.name,
+                                              controller: TextEditingController(
+                                                text: element,
+                                              ),
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
+                                    ],
+                                  );
+                                },
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Flexible(child: const SizedBox()),
+                                  Flexible(
+                                    child: ButtonSecundary(
+                                      title: 'Agregar respuesta',
+                                      onPressed: () {
+                                        adminfunctions.addAnswer(index);
+                                      },
+                                      load: false,
                                     ),
-                                  ],
-                                );
-                              })
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                height: 4,
+                                thickness: 3,
+                                color: AqColors.text_withe_title1,
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ),
                             ],
                           );
                         },
                       ),
-                    )
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    ButtonPrimary(
+                      title: 'Agregar pregunta',
+                      onPressed: () {
+                        adminfunctions.addQuestion();
+                      },
+                      load: false,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),

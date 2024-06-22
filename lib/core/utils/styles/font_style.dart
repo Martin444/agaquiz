@@ -13,4 +13,10 @@ class AqTextStyle {
     fontSize: 16,
     fontWeight: FontWeight.w400,
   );
+
+  static var textButtonStyle1 = GoogleFonts.poppins(
+    color: AqColors.text_black_btn1,
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
 }
