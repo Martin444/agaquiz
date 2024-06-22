@@ -16,60 +16,55 @@ class LoginPage extends StatelessWidget {
       body: Stack(
         children: [
           const BackgroundStars(),
-          Consumer<LoginController>(
-            builder: (context, controller, child) {
-              return Center(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Center(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
                     children: [
-                      Column(
-                        children: [
-                          const SizedBox(
-                            height: 80,
-                          ),
-                          Image.asset('assets/agapitalogo.png'),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          Text(
-                            '¡Bienvenido a AgaQuiz!',
-                            textAlign: TextAlign.center,
-                            style: AqTextStyle.primaryTextStyle,
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          TextInputPrincipal(
-                            hintText: 'Ingresá tu nombre',
-                            inputType: TextInputType.multiline,
-                            controller: controller.nameController,
-                          ),
-                        ],
+                      const SizedBox(
+                        height: 80,
                       ),
-                      Column(
-                        children: [
-                          ButtonPrimary(
-                            title: 'Continuar',
-                            onPressed: () {
-                              controller.postNameUser();
-                              context.beamToNamed('/admin');
-                            },
-                            load: false,
-                          ),
-                          const SizedBox(
-                            height: 30,
-                          ),
-                        ],
+                      Image.asset('assets/agapitalogo.png'),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        '¡Bienvenido a AgaQuiz!',
+                        textAlign: TextAlign.center,
+                        style: AqTextStyle.primaryTextStyle,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TextInputPrincipal(
+                        hintText: 'Ingresá tu nombre',
+                        inputType: TextInputType.multiline,
+                        controller: TextEditingController(),
                       ),
                     ],
                   ),
-                ),
-              );
-            },
-          )
+                  Column(
+                    children: [
+                      ButtonPrimary(
+                        title: 'Continuar',
+                        onPressed: () {
+                          context.beamToNamed('/admin');
+                        },
+                        load: false,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

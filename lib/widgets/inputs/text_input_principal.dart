@@ -34,8 +34,8 @@ class TextInputPrincipal extends StatelessWidget {
         maxLines: maxLines,
         style: const TextStyle(
           fontSize: 15.0,
-          fontFamily: "Lato",
-          color: Colors.blueGrey,
+          fontFamily: "Poppins",
+          color: Color.fromARGB(255, 41, 41, 41),
           fontWeight: FontWeight.bold,
         ),
         decoration: InputDecoration(

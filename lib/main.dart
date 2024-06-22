@@ -5,6 +5,7 @@ import 'package:agaquiz/features/admin/presentation/admin_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -61,11 +62,7 @@ class MyApp extends StatelessWidget {
       ).call,
     );
 
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => LoginController()),
-        ChangeNotifierProvider(create: (context) => AdminController()),
-      ],
+    return ProviderScope(
       child: MaterialApp.router(
         title: 'AgaQuiz',
         debugShowCheckedModeBanner: false,
