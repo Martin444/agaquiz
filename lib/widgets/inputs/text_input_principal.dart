@@ -4,6 +4,7 @@ class TextInputPrincipal extends StatelessWidget {
   final String? hintText;
   final TextInputType? inputType;
   final TextEditingController? controller;
+  final Function(String)? onChange;
   final int? maxLines;
 
   const TextInputPrincipal(
@@ -11,6 +12,7 @@ class TextInputPrincipal extends StatelessWidget {
       @required this.hintText,
       @required this.inputType,
       @required this.controller,
+      this.onChange,
       this.maxLines});
 
   @override
@@ -51,6 +53,7 @@ class TextInputPrincipal extends StatelessWidget {
             borderRadius: BorderRadius.all(Radius.circular(9.0)),
           ),
         ),
+        onChanged: onChange,
       ),
     );
   }

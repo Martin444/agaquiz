@@ -1,7 +1,9 @@
+import 'package:agaquiz/features/admin/model/answer_model.dart';
+
 class QuestionAndAnswer {
   int index;
   String question;
-  List<String> answers;
+  List<AnswerModel> answers;
 
   QuestionAndAnswer({
     required this.index,
@@ -13,12 +15,14 @@ class QuestionAndAnswer {
       QuestionAndAnswer(
         index: json['index'],
         question: json['question'],
-        answers: List<String>.from(json['answers']),
+        answers: (json['answers'] as List<dynamic>)
+            .map((answerJson) => AnswerModel.fromJson(answerJson))
+            .toList(),
       );
 
   Map<String, dynamic> toJson() => {
         'index': index,
         'question': question,
-        'answers': List<dynamic>.from(answers),
+        'answers': answers.map((answer) => answer.toJson()).toList(),
       };
 }

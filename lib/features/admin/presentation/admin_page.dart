@@ -45,8 +45,14 @@ class AdminPage extends ConsumerWidget {
                             hintText:
                                 'Escribe la descripcion del juego o las reglas',
                             inputType: TextInputType.multiline,
-                            controller: adminController.descriptionQuiz,
+                            controller: TextEditingController(
+                              text: adminController.quizEditable!.description
+                                  .toString(),
+                            ),
                             maxLines: 4,
+                            onChange: (value) {
+                              adminfunctions.updateDescription(value);
+                            },
                           ),
                           const SizedBox(
                             height: 20,
@@ -54,15 +60,21 @@ class AdminPage extends ConsumerWidget {
                           TextInputPrincipal(
                             hintText: 'Tiempo de duración entre preguntas',
                             inputType: TextInputType.number,
-                            controller: adminController.durationQuiz,
+                            controller: TextEditingController(
+                              text: adminController.quizEditable!.duration
+                                  .toString(),
+                            ),
+                            onChange: (duration) {
+                              adminfunctions.updateDuration(duration);
+                            },
                           ),
                           const SizedBox(
                             height: 20,
                           ),
                           Expanded(
                             child: ListView.builder(
-                              itemCount:
-                                  adminController.listQuestion?.length ?? 0,
+                              itemCount: adminController
+                                  .quizEditable!.questionAndAnswer.length,
                               itemBuilder: (ctx, index) {
                                 return Column(
                                   children: [
@@ -70,17 +82,21 @@ class AdminPage extends ConsumerWidget {
                                       hintText: 'Escribe tu pregunta',
                                       inputType: TextInputType.name,
                                       controller: TextEditingController(
-                                        text: adminController
-                                            .listQuestion?[index].question,
+                                        text: adminController.quizEditable!
+                                            .questionAndAnswer[index].question,
                                       ),
+                                      onChange: (value) {
+                                        adminfunctions.updateQuestions(
+                                            index, value);
+                                      },
                                     ),
                                     const SizedBox(
                                       height: 20,
                                     ),
-                                    ...adminController
-                                        .listQuestion![index].answers
+                                    ...adminController.quizEditable!
+                                        .questionAndAnswer[index].answers
                                         .map(
-                                      (element) {
+                                      (answer) {
                                         return Column(
                                           children: [
                                             const SizedBox(
@@ -90,7 +106,7 @@ class AdminPage extends ConsumerWidget {
                                               onLongPress: () {
                                                 adminfunctions.removeAnswer(
                                                   index,
-                                                  element,
+                                                  answer,
                                                 );
                                               },
                                               child: Row(
@@ -107,8 +123,16 @@ class AdminPage extends ConsumerWidget {
                                                           TextInputType.name,
                                                       controller:
                                                           TextEditingController(
-                                                        text: element,
+                                                        text: answer.value,
                                                       ),
+                                                      onChange: (p0) {
+                                                        adminfunctions
+                                                            .updateAnswers(
+                                                          index,
+                                                          answer,
+                                                          p0,
+                                                        );
+                                                      },
                                                     ),
                                                   ),
                                                 ],
@@ -164,7 +188,17 @@ class AdminPage extends ConsumerWidget {
                             load: false,
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
+                          ),
+                          ButtonPrimary(
+                            title: 'Actualizar preguntas',
+                            onPressed: () {
+                              adminfunctions.updateData();
+                            },
+                            load: false,
+                          ),
+                          const SizedBox(
+                            height: 10,
                           ),
                         ],
                       ),

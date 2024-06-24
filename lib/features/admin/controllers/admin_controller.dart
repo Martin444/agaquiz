@@ -1,8 +1,8 @@
+import 'package:agaquiz/features/admin/model/answer_model.dart';
 import 'package:agaquiz/features/admin/model/qa_model.dart';
 import 'package:agaquiz/features/admin/model/quiz_model.dart';
 import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AdminController extends StateNotifier<AdminState> {
@@ -28,13 +28,7 @@ class AdminController extends StateNotifier<AdminState> {
 
         state = AdminState(
           quizInitial: quizInitialize,
-          descriptionQuiz: TextEditingController(
-            text: quizInitialize.description,
-          ),
-          durationQuiz: TextEditingController(
-            text: quizInitialize.duration.toString(),
-          ),
-          listQuestion: quizInitialize.questionAndAnswer,
+          quizEditable: quizInitialize,
           isLoadingQuestion: false,
         );
       }
@@ -45,52 +39,108 @@ class AdminController extends StateNotifier<AdminState> {
   }
 
   void addQuestion() {
-    var quizable = state.listQuestion;
+    var quizable = state.quizEditable?.questionAndAnswer;
 
     quizable!.add(
       QuestionAndAnswer(
         index: 0,
-        question: 'pregunta ${state.listQuestion!.length + 1}',
+        question:
+            'pregunta ${state.quizEditable!.questionAndAnswer.length + 1}',
         answers: [],
       ),
     );
-
     state = AdminState(
-      listQuestion: quizable,
+      quizEditable: state.quizEditable,
     );
   }
 
   void addAnswer(int indexQuestion) {
-    if (state.listQuestion == null ||
-        indexQuestion >= state.listQuestion!.length) {
+    if (state.quizEditable?.questionAndAnswer == null ||
+        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
-    var questions = state.listQuestion;
-    var currentQuestion = questions![indexQuestion];
+    var questions = state.quizEditable!.questionAndAnswer;
+    var currentQuestion = questions[indexQuestion];
     var answers = currentQuestion.answers;
 
-    answers.add('Respuesta #${answers.length + 1}');
+    // answers.add('Respuesta #${answers.length + 1}');
+    answers.add(
+      AnswerModel(
+        id: answers.length + 1,
+        value: 'Respuesta #${answers.length + 1}',
+      ),
+    );
 
     state = AdminState(
-      listQuestion: questions,
+      quizEditable: state.quizEditable,
     );
   }
 
-  void removeAnswer(int indexQuestion, String answer) {
-    if (state.listQuestion == null ||
-        indexQuestion >= state.listQuestion!.length) {
+  void removeAnswer(int indexQuestion, AnswerModel answer) {
+    if (state.quizEditable?.questionAndAnswer == null ||
+        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
-    var questions = state.listQuestion;
-    var currentQuestion = questions![indexQuestion];
+    var questions = state.quizEditable!.questionAndAnswer;
+    var currentQuestion = questions[indexQuestion];
     var answers = currentQuestion.answers;
 
     answers.remove(answer);
 
     state = AdminState(
-      listQuestion: questions,
+      quizEditable: state.quizEditable,
     );
+  }
+
+  void updateDescription(String newDescription) {
+    state.quizEditable!.description = newDescription;
+  }
+
+  void updateDuration(String newDuration) {
+    state.quizEditable!.duration = int.tryParse(newDuration) ?? 5;
+  }
+
+  void updateQuestions(int indexQuestion, String newQuestion) {
+    var questions = state.quizEditable!.questionAndAnswer;
+    var currentQuestion = questions[indexQuestion];
+    currentQuestion.question = newQuestion;
+
+    // Future.delayed(Duration(seconds: 2), () {
+    //   state = AdminState(
+    //     quizInitial: state.quizEditable,
+    //     quizEditable: state.quizEditable,
+    //   );
+    // });
+  }
+
+  void updateAnswers(int indexQuestion, AnswerModel value, String newValue) {
+    if (state.quizEditable?.questionAndAnswer == null ||
+        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
+      // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
+      return;
+    }
+
+    var currentQuestion = state.quizEditable!.questionAndAnswer[indexQuestion];
+    var indexAnswer =
+        currentQuestion.answers.indexWhere((answer) => answer.id == value.id);
+
+    if (indexAnswer != -1) {
+      // Si se encuentra la respuesta, actualiza su valor.
+      currentQuestion.answers[indexAnswer] =
+          AnswerModel(id: value.id, value: newValue);
+    }
+  }
+
+  void updateData() async {
+    try {
+      CollectionReference collection = fireBaseData.collection('quiz');
+      DocumentReference documentRef = collection.doc('eJCxsGIDjZt0pt60mYat');
+      await documentRef.update(state.quizEditable!.toJson());
+    } catch (e) {
+      print('ERROR DE FIREBASE');
+      print(e.toString());
+    }
   }
 }
