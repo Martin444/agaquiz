@@ -11,14 +11,14 @@ class AdminState {
 
   List<QuestionAndAnswer>? listQuestion;
 
-  bool? isLoadingQuestion;
+  bool isLoadingQuestion;
 
   AdminState({
     this.quizInitial,
     this.descriptionQuiz,
     this.durationQuiz,
     this.listQuestion,
-    this.isLoadingQuestion,
+    this.isLoadingQuestion = false,
   });
 }
 

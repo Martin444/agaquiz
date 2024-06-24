@@ -76,4 +76,21 @@ class AdminController extends StateNotifier<AdminState> {
       listQuestion: questions,
     );
   }
+
+  void removeAnswer(int indexQuestion, String answer) {
+    if (state.listQuestion == null ||
+        indexQuestion >= state.listQuestion!.length) {
+      // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
+      return;
+    }
+    var questions = state.listQuestion;
+    var currentQuestion = questions![indexQuestion];
+    var answers = currentQuestion.answers;
+
+    answers.remove(answer);
+
+    state = AdminState(
+      listQuestion: questions,
+    );
+  }
 }

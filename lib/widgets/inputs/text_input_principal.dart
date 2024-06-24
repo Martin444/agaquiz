@@ -17,14 +17,13 @@ class TextInputPrincipal extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius:
-            BorderRadius.circular(9.0), // El mismo radio que tu InputBorder
+        borderRadius: BorderRadius.circular(9.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25), // Color de la sombra
-            spreadRadius: 1, // Extensión de la sombra
-            blurRadius: 15, // Difuminado de la sombra
-            offset: Offset(0, 11), // Posición de la sombra
+            color: Colors.black.withOpacity(0.25),
+            spreadRadius: 1,
+            blurRadius: 15,
+            offset: const Offset(0, 11),
           ),
         ],
       ),
