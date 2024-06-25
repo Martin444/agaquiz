@@ -10,7 +10,7 @@ void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     try {
-      print("AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k");
+      print(FIRE_API_KEY);
       if (Firebase.apps.isEmpty) {
         await Firebase.initializeApp(
           options: const FirebaseOptions(
@@ -39,9 +39,7 @@ void main() async {
     }
     runApp(const MyApp());
   } catch (e) {
-    var firebaseError = (e as FirebaseException);
     print(e);
-    print(firebaseError.code);
   }
 }
 
