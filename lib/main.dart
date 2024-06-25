@@ -38,6 +38,7 @@ void main() async {
     runApp(const MyApp());
   } catch (e) {
     var firebaseError = (e as FirebaseException);
+    print(e);
     print(firebaseError.code);
   }
 }
