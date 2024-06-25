@@ -102,6 +102,18 @@ class AdminController extends StateNotifier<AdminState> {
     state.quizEditable!.duration = int.tryParse(newDuration) ?? 5;
   }
 
+  void updateIndexAnswer(int indexQuestion, AnswerModel answer) {
+    var questions = state.quizEditable!.questionAndAnswer;
+    var currentQuestion = questions[indexQuestion];
+    var answerSelect =
+        currentQuestion.answers.where((value) => value.id == answer.id);
+
+    currentQuestion.index = answerSelect.first.id;
+    state = AdminState(
+      quizEditable: state.quizEditable,
+    );
+  }
+
   void updateQuestions(int indexQuestion, String newQuestion) {
     var questions = state.quizEditable!.questionAndAnswer;
     var currentQuestion = questions[indexQuestion];

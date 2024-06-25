@@ -112,8 +112,21 @@ class AdminPage extends ConsumerWidget {
                                               child: Row(
                                                 children: [
                                                   Checkbox(
-                                                    value: false,
-                                                    onChanged: (state) {},
+                                                    value: answer.id ==
+                                                        adminController
+                                                            .quizEditable!
+                                                            .questionAndAnswer[
+                                                                index]
+                                                            .index,
+                                                    activeColor: AqColors
+                                                        .bg_active_success,
+                                                    onChanged: (state) {
+                                                      adminfunctions
+                                                          .updateIndexAnswer(
+                                                        index,
+                                                        answer,
+                                                      );
+                                                    },
                                                   ),
                                                   Flexible(
                                                     child: TextInputPrincipal(

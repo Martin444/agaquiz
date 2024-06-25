@@ -16,4 +16,5 @@ class AqColors {
   static var text_black_btn1 = const Color(0xFF000000);
   static var bg_button_black = const Color(0xff393B43);
   static var bg_button_white = const Color(0xffffffff);
+  static var bg_active_success = const Color(0xff24E837);
 }
