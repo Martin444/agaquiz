@@ -1,7 +1,3 @@
 [build]
-    command = "flutter build web --release --web-renderer html  --dart-define=API_URL=https://api.qa.openpass.com.ar/bhubApi/1.0.0  --dart-define=ADMIN_NAME=admin19 
-  --dart-define=COLOR_PRIMARY=#4f8a03   --dart-define=FIRE_API_KEY=AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k 
-  --dart-define=FIRE_AUTH_DOMAIN=pregunta2-fc6ff.firebaseapp.com   --dart-define=FIRE_STORAGE_BUCKET=pregunta2-fc6ff.appspot.com 
-  --dart-define=FIRE_APP_ID=1:732163124779:web:c39622e4f219d7a86dc46e  --dart-define=FIRE_MESSAGING_SENDER_ID=732163124779 
-  --dart-define=FIRE_PROYECT_ID=pregunta2-fc6ff"
+    command = "flutter build web --release --web-renderer html  --dart-define=API_URL=https://api.qa.openpass.com.ar/bhubApi/1.0.0  --dart-define=ADMIN_NAME=admin19  --dart-define=COLOR_PRIMARY=#4f8a03   --dart-define=FIRE_API_KEY=AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k  --dart-define=FIRE_AUTH_DOMAIN=pregunta2-fc6ff.firebaseapp.com   --dart-define=FIRE_STORAGE_BUCKET=pregunta2-fc6ff.appspot.com   --dart-define=FIRE_APP_ID=1:732163124779:web:c39622e4f219d7a86dc46e  --dart-define=FIRE_MESSAGING_SENDER_ID=732163124779  --dart-define=FIRE_PROYECT_ID=pregunta2-fc6ff"
     publish = "build/web"
