@@ -1,3 +1,4 @@
+import 'package:agaquiz/core/config.dart';
 import 'package:agaquiz/features/Login/presentation/page/login_page.dart';
 import 'package:agaquiz/features/admin/presentation/admin_page.dart';
 import 'package:beamer/beamer.dart';
@@ -10,14 +11,15 @@ void main() async {
     WidgetsFlutterBinding.ensureInitialized();
     try {
       if (Firebase.apps.isEmpty) {
+        print("AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k");
         await Firebase.initializeApp(
           options: const FirebaseOptions(
-            apiKey: "AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k",
-            authDomain: "pregunta2-fc6ff.firebaseapp.com",
-            storageBucket: "pregunta2-fc6ff.appspot.com",
-            appId: "1:732163124779:web:c39622e4f219d7a86dc46e",
-            messagingSenderId: "732163124779",
-            projectId: "pregunta2-fc6ff",
+            apiKey: FIRE_API_KEY,
+            authDomain: FIRE_AUTH_DOMAIN,
+            storageBucket: FIRE_STORAGE_BUCKET,
+            appId: FIRE_APP_ID,
+            messagingSenderId: FIRE_MESSAGING_SENDER_ID,
+            projectId: FIRE_PROYECT_ID,
           ),
         );
       }
@@ -25,12 +27,12 @@ void main() async {
       if (e.code == 'not-initialized') {
         await Firebase.initializeApp(
           options: const FirebaseOptions(
-            apiKey: "AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k",
-            authDomain: "pregunta2-fc6ff.firebaseapp.com",
-            storageBucket: "pregunta2-fc6ff.appspot.com",
-            appId: "1:732163124779:web:c39622e4f219d7a86dc46e",
-            messagingSenderId: "732163124779",
-            projectId: "pregunta2-fc6ff",
+            apiKey: FIRE_API_KEY,
+            authDomain: FIRE_AUTH_DOMAIN,
+            storageBucket: FIRE_STORAGE_BUCKET,
+            appId: FIRE_APP_ID,
+            messagingSenderId: FIRE_MESSAGING_SENDER_ID,
+            projectId: FIRE_PROYECT_ID,
           ),
         );
       }
