@@ -10,8 +10,8 @@ void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     try {
+      print("AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k");
       if (Firebase.apps.isEmpty) {
-        print("AIzaSyBgD94GggqsaXFdlJiyihSjzuQ7-cJWS8k");
         await Firebase.initializeApp(
           options: const FirebaseOptions(
             apiKey: FIRE_API_KEY,
