@@ -8,10 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   try {
+    print('entro al main');
     WidgetsFlutterBinding.ensureInitialized();
     try {
+      print('entro al try');
       print(FIRE_API_KEY);
       if (Firebase.apps.isEmpty) {
+        print('firebase empty');
         await Firebase.initializeApp(
           options: const FirebaseOptions(
             apiKey: FIRE_API_KEY,
@@ -24,6 +27,7 @@ void main() async {
         );
       }
     } on FirebaseException catch (e) {
+      print('firebase error');
       if (e.code == 'not-initialized') {
         await Firebase.initializeApp(
           options: const FirebaseOptions(
@@ -39,6 +43,7 @@ void main() async {
     }
     runApp(const MyApp());
   } catch (e) {
+    print('firebase main error');
     print(e);
   }
 }
