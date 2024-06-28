@@ -1,7 +1,14 @@
+import 'package:agaquiz/features/Login/controllers/login_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-abstract class LoginStateManage extends ChangeNotifier {
+class LoginStateManage {
   TextEditingController nameController = TextEditingController();
 
-  void postNameUser();
+  String errorLogin = '';
 }
+
+final loginStateProvider =
+    StateNotifierProvider<LoginController, LoginStateManage>((ref) {
+  return LoginController();
+});

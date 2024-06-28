@@ -8,26 +8,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() async {
   try {
-    print('entro al main');
     WidgetsFlutterBinding.ensureInitialized();
     try {
-      print('entro al try');
-      print(FIRE_API_KEY);
-      print(Firebase.apps.isEmpty);
       if (Firebase.apps.isEmpty) {
-        print('firebase empty');
         await initializeFirebase();
       }
     } catch (e) {
-      print('firebase error');
-
       await initializeFirebase();
-      // if (e.code == 'not-initialized') {
-      // }
     }
     runApp(const MyApp());
   } catch (e) {
-    print('firebase main error');
     print(e);
   }
 }

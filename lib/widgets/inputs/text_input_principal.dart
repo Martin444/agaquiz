@@ -7,13 +7,14 @@ class TextInputPrincipal extends StatelessWidget {
   final Function(String)? onChange;
   final int? maxLines;
 
-  const TextInputPrincipal(
-      {Key? key,
-      @required this.hintText,
-      @required this.inputType,
-      @required this.controller,
-      this.onChange,
-      this.maxLines});
+  const TextInputPrincipal({
+    super.key,
+    @required this.hintText,
+    @required this.inputType,
+    @required this.controller,
+    this.onChange,
+    this.maxLines,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +44,12 @@ class TextInputPrincipal extends StatelessWidget {
           filled: true,
           fillColor: const Color(0xFFe5e5e5),
           border: InputBorder.none,
+          // errorText: 'Usa un nombre de jugador',
+          // errorStyle: TextStyle(
+          //   fontWeight: FontWeight.w700,
+          //   fontSize: 18,
+          //   color: AqColors.bg_active_error,
+          // ),
           hintText: hintText,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFe5e5e5)),

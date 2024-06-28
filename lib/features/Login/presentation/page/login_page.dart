@@ -1,15 +1,19 @@
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
+import 'package:agaquiz/features/Login/presentation/state/login_state_abs.dart';
 import 'package:agaquiz/widgets/buttons/button_primary.dart';
 import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
 import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var loginstate = ref.watch(loginStateProvider);
+    var loginfunctions = ref.watch(loginStateProvider.notifier);
     return Scaffold(
       body: Stack(
         children: [
@@ -41,7 +45,7 @@ class LoginPage extends StatelessWidget {
                       TextInputPrincipal(
                         hintText: 'Ingresá tu nombre',
                         inputType: TextInputType.multiline,
-                        controller: TextEditingController(),
+                        controller: loginstate.nameController,
                       ),
                     ],
                   ),
@@ -50,7 +54,10 @@ class LoginPage extends StatelessWidget {
                       ButtonPrimary(
                         title: 'Continuar',
                         onPressed: () {
-                          context.beamToNamed('/admin');
+                          var isEqual = loginfunctions.postNameUser();
+                          print(isEqual);
+                          if (isEqual) context.beamToNamed('/admin');
+                          // context.beamToNamed('/admin');
                         },
                         load: false,
                       ),
