@@ -4,18 +4,16 @@ import 'package:flutter/material.dart';
 // ignore: must_be_immutable
 class ButtonNext extends StatefulWidget {
   //parametros
-  String title;
   VoidCallback onPressed;
   bool load;
   bool disabled = false;
 
   ButtonNext({
-    Key? key,
-    required this.title,
+    super.key,
     required this.onPressed,
     required this.load,
     this.disabled = false,
-  }) : super(key: key);
+  });
 
   @override
   State<ButtonNext> createState() => _ButtonNextState();

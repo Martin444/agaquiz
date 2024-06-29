@@ -16,7 +16,7 @@ class OnBoardinGameState {
 }
 
 // Define un provider para el estado que quieres manejar
-final adminStateProvider =
+final onBoardingStateProvider =
     StateNotifierProvider<OnBoardingGameController, OnBoardinGameState>((ref) {
   return OnBoardingGameController();
 });

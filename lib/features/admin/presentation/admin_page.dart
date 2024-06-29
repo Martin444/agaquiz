@@ -5,6 +5,7 @@ import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
 import 'package:agaquiz/widgets/buttons/button_primary.dart';
 import 'package:agaquiz/widgets/buttons/button_secundary.dart';
 import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
+import 'package:agaquiz/widgets/utils/aq_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -30,11 +31,7 @@ class AdminPage extends ConsumerWidget {
               ),
               child: Center(
                 child: adminController.isLoadingQuestion
-                    ? CircularProgressIndicator(
-                        color: AqColors.bg_button_white,
-                        strokeWidth: 7,
-                        strokeCap: StrokeCap.round,
-                      )
+                    ? const AqLoader()
                     : Column(
                         children: [
                           Text(
@@ -162,7 +159,7 @@ class AdminPage extends ConsumerWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Flexible(child: const SizedBox()),
+                                        const Flexible(child: SizedBox()),
                                         Flexible(
                                           child: ButtonSecundary(
                                             title: 'Agregar respuesta',
