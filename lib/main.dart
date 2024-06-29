@@ -1,6 +1,7 @@
 import 'package:agaquiz/core/config.dart';
 import 'package:agaquiz/features/Login/presentation/page/login_page.dart';
 import 'package:agaquiz/features/admin/presentation/admin_page.dart';
+import 'package:agaquiz/features/on_boarding/presentation/page/on_boarding_game_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -28,13 +29,27 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routerDelegate = BeamerDelegate(
-      locationBuilder: RoutesLocationBuilder(
-        routes: {
-          '/': (context, state, data) => const LoginPage(),
-          '/admin': (context, state, data) => const AdminPage(),
-        },
-      ).call,
-    );
+        locationBuilder: RoutesLocationBuilder(
+          routes: {
+            '/': (context, state, data) => const LoginPage(),
+            '/admin': (context, state, data) => const AdminPage(),
+            '/iniciar': (context, state, data) {
+              return const OnBoardingGamePage();
+            },
+          },
+        ).call,
+        guards: [
+          BeamGuard(
+            pathPatterns: ['/iniciar'],
+            check: (context, state) {
+              if (USER_NAME.isEmpty) {
+                context.beamToNamed('/');
+                return false;
+              }
+              return true;
+            },
+          ),
+        ]);
 
     return ProviderScope(
       child: MaterialApp.router(

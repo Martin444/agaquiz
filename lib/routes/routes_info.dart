@@ -27,8 +27,8 @@ class MyRouterDelegate extends RouterDelegate<MyRoutePath>
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(
-          key: const ValueKey('HomePage'),
+        const MaterialPage(
+          key: ValueKey('HomePage'),
           child: LoginPage(),
         ),
         if (_currentPage == '/detalle')

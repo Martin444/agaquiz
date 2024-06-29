@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 class AqTextStyle {
   static var primaryTextStyle = GoogleFonts.poppins(
     color: AqColors.text_withe_title1,
-    fontSize: 45,
+    fontSize: 43,
     fontWeight: FontWeight.bold,
   );
   static var textButtonStyle = GoogleFonts.poppins(

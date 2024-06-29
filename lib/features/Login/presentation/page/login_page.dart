@@ -1,3 +1,4 @@
+import 'package:agaquiz/core/config.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
 import 'package:agaquiz/features/Login/presentation/state/login_state_abs.dart';
@@ -30,12 +31,15 @@ class LoginPage extends ConsumerWidget {
                       const SizedBox(
                         height: 80,
                       ),
-                      Image.asset('assets/agapitalogo.png'),
+                      Image.asset(
+                        'assets/quizmalogo.png',
+                        height: 180,
+                      ),
                       const SizedBox(
                         height: 10,
                       ),
                       Text(
-                        '¡Bienvenido a AgaQuiz!',
+                        '¡Bienvenido a Quizma!',
                         textAlign: TextAlign.center,
                         style: AqTextStyle.primaryTextStyle,
                       ),
@@ -54,10 +58,24 @@ class LoginPage extends ConsumerWidget {
                       ButtonPrimary(
                         title: 'Continuar',
                         onPressed: () {
-                          var isEqual = loginfunctions.postNameUser();
-                          print(isEqual);
-                          if (isEqual) context.beamToNamed('/admin');
-                          // context.beamToNamed('/admin');
+                          try {
+                            var isEqual = loginfunctions.postNameUser();
+                            if (!isEqual) {
+                              try {
+                                Beamer.of(context).beamToNamed(
+                                  '/iniciar',
+                                  data: {'username': USER_NAME},
+                                );
+                                return;
+                              } catch (e) {
+                                print(e);
+                              }
+                            }
+
+                            if (isEqual) context.beamToNamed('/admin');
+                          } catch (e) {
+                            print(e);
+                          }
                         },
                         load: false,
                       ),

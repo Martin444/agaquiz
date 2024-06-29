@@ -10,6 +10,8 @@ class LoginController extends StateNotifier<LoginStateManage> {
       if (state.nameController.text == ADMIN_NAME) {
         return true;
       }
+
+      USER_NAME = state.nameController.text;
       return false;
     }
     return false;
