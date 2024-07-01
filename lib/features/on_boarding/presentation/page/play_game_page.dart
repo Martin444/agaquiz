@@ -49,6 +49,7 @@ class PlayGamePage extends ConsumerWidget {
                   height: 10,
                 ),
                 Expanded(
+                  flex: 3,
                   child: PageView.builder(
                     itemCount:
                         onBoardController.quizInitial?.questionAndAnswer.length,
@@ -136,28 +137,30 @@ class PlayGamePage extends ConsumerWidget {
                   ),
                 ),
                 Expanded(
+                    flex: 1,
                     child: Center(
-                  child: CustomCircularProgressIndicator(
-                    animationDuration: Duration(
-                      seconds: onBoardController.quizInitial?.duration ?? 0,
-                    ),
-                    onFinished: () {
-                      onBoardController.questionScrollController?.nextPage(
-                        duration: Duration(milliseconds: 300),
-                        curve: Curves.easeIn,
-                      );
-                      var currentPage =
-                          onBoardController.questionScrollController!.page! + 1;
-                      var quantityQuestions = onBoardController
-                          .quizInitial?.questionAndAnswer.length;
+                      child: CustomCircularProgressIndicator(
+                        animationDuration: Duration(
+                          seconds: onBoardController.quizInitial?.duration ?? 0,
+                        ),
+                        onFinished: () {
+                          onBoardController.questionScrollController?.nextPage(
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeIn,
+                          );
+                          var currentPage = onBoardController
+                                  .questionScrollController!.page! +
+                              1;
+                          var quantityQuestions = onBoardController
+                              .quizInitial?.questionAndAnswer.length;
 
-                      if (currentPage == quantityQuestions) {
-                        onBoardFuncions.getCorrectAnswers();
-                        context.beamToReplacementNamed('/bien-hecho');
-                      }
-                    },
-                  ),
-                )),
+                          if (currentPage == quantityQuestions) {
+                            onBoardFuncions.getCorrectAnswers();
+                            context.beamToReplacementNamed('/bien-hecho');
+                          }
+                        },
+                      ),
+                    )),
               ],
             ),
           )
