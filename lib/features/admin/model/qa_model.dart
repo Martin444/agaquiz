@@ -25,4 +25,8 @@ class QuestionAndAnswer {
         'question': question,
         'answers': answers.map((answer) => answer.toJson()).toList(),
       };
+
+  int getAnswerIndex() {
+    return index;
+  }
 }

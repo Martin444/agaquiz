@@ -4,6 +4,8 @@ import 'package:agaquiz/core/utils/styles/decorators.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
 import 'package:agaquiz/features/on_boarding/presentation/state/on_boardin_game_state.dart';
+import 'package:agaquiz/widgets/utils/circular_progress_animation.dart';
+import 'package:beamer/beamer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -13,6 +15,9 @@ class PlayGamePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var onBoardController = ref.watch(onBoardingStateProvider);
+    var onBoardFuncions = ref.watch(onBoardingStateProvider.notifier);
+    onBoardController.questionScrollController = PageController();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -35,7 +40,7 @@ class PlayGamePage extends ConsumerWidget {
                       style: AqTextStyle.textDescriptionTitle2,
                     ),
                     Text(
-                      '0/${onBoardController.quizInitial?.questionAndAnswer.length}',
+                      '${onBoardController.quizEditable?.questionAndAnswer.length}/${onBoardController.quizInitial?.questionAndAnswer.length}',
                       style: AqTextStyle.textDescriptionTitle2,
                     ),
                   ],
@@ -47,6 +52,7 @@ class PlayGamePage extends ConsumerWidget {
                   child: PageView.builder(
                     itemCount:
                         onBoardController.quizInitial?.questionAndAnswer.length,
+                    controller: onBoardController.questionScrollController,
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
@@ -72,37 +78,55 @@ class PlayGamePage extends ConsumerWidget {
                           ...onBoardController
                               .quizInitial!.questionAndAnswer[index].answers
                               .map((answer) {
-                            return Container(
-                              margin: const EdgeInsets.only(bottom: 20),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 10,
-                                vertical: 10,
-                              ),
-                              decoration: AqDecorators.decoratorCard1,
-                              child: Row(
-                                children: [
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Text(
-                                    '${answer.id}',
-                                    style: AqTextStyle.textDescriptionTitle3,
-                                  ),
-                                  Container(
-                                    height: 15,
-                                    margin: const EdgeInsets.symmetric(
-                                      horizontal: 10,
+                            return GestureDetector(
+                              onTap: () {
+                                onBoardFuncions.addResponseUser(
+                                    onBoardController
+                                        .quizInitial!.questionAndAnswer[index],
+                                    answer.id);
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(bottom: 20),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 10,
+                                  vertical: 10,
+                                ),
+                                decoration:
+                                    AqDecorators.decoratorCard1.copyWith(
+                                  color: onBoardFuncions.isAnswerCorrect(
+                                    onBoardController
+                                        .quizInitial!.questionAndAnswer[index],
+                                    answer.id,
+                                  )
+                                      ? AqColors.bg_active_success
+                                      : AqColors.bg_button_white,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const SizedBox(
+                                      width: 5,
                                     ),
-                                    width: 1,
-                                    color: AqColors.text_black_btn1,
-                                  ),
-                                  Expanded(
-                                    child: Text(
-                                      answer.value,
+                                    Text(
+                                      '${answer.id}',
                                       style: AqTextStyle.textDescriptionTitle3,
                                     ),
-                                  )
-                                ],
+                                    Container(
+                                      height: 15,
+                                      margin: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      width: 1,
+                                      color: AqColors.text_black_btn1,
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        answer.value,
+                                        style:
+                                            AqTextStyle.textDescriptionTitle3,
+                                      ),
+                                    )
+                                  ],
+                                ),
                               ),
                             );
                           }).toList(),
@@ -111,6 +135,29 @@ class PlayGamePage extends ConsumerWidget {
                     },
                   ),
                 ),
+                Expanded(
+                    child: Center(
+                  child: CustomCircularProgressIndicator(
+                    animationDuration: Duration(
+                      seconds: onBoardController.quizInitial?.duration ?? 0,
+                    ),
+                    onFinished: () {
+                      onBoardController.questionScrollController?.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
+                      );
+                      var currentPage =
+                          onBoardController.questionScrollController!.page! + 1;
+                      var quantityQuestions = onBoardController
+                          .quizInitial?.questionAndAnswer.length;
+
+                      if (currentPage == quantityQuestions) {
+                        onBoardFuncions.getCorrectAnswers();
+                        context.beamToNamed('/bien-hecho');
+                      }
+                    },
+                  ),
+                )),
               ],
             ),
           )

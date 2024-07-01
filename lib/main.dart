@@ -3,6 +3,7 @@ import 'package:agaquiz/features/Login/presentation/page/login_page.dart';
 import 'package:agaquiz/features/admin/presentation/admin_page.dart';
 import 'package:agaquiz/features/on_boarding/presentation/page/on_boarding_game_page.dart';
 import 'package:agaquiz/features/on_boarding/presentation/page/play_game_page.dart';
+import 'package:agaquiz/features/on_boarding/presentation/page/status_game_page.dart';
 import 'package:beamer/beamer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class MyApp extends StatelessWidget {
           '/': (context, state, data) => const LoginPage(),
           '/admin': (context, state, data) => const AdminPage(),
           '/suerte': (context, state, data) => const PlayGamePage(),
+          '/bien-hecho': (context, state, data) => const StatusGamePage(),
           '/iniciar': (context, state, data) {
             return const OnBoardingGamePage();
           },
@@ -53,6 +55,16 @@ class MyApp extends StatelessWidget {
         ),
         BeamGuard(
           pathPatterns: ['/suerte'],
+          check: (context, state) {
+            if (USER_NAME.isEmpty) {
+              context.beamToNamed('/');
+              return false;
+            }
+            return true;
+          },
+        ),
+        BeamGuard(
+          pathPatterns: ['/bien-hecho'],
           check: (context, state) {
             if (USER_NAME.isEmpty) {
               context.beamToNamed('/');
