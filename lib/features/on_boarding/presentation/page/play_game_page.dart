@@ -153,7 +153,7 @@ class PlayGamePage extends ConsumerWidget {
 
                       if (currentPage == quantityQuestions) {
                         onBoardFuncions.getCorrectAnswers();
-                        context.beamToNamed('/bien-hecho');
+                        context.beamToReplacementNamed('/bien-hecho');
                       }
                     },
                   ),
