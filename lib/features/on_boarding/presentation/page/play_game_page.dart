@@ -22,17 +22,14 @@ class PlayGamePage extends ConsumerWidget {
       body: Stack(
         children: [
           const BackgroundStars(),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: 20,
-            ),
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 30,
-                ),
-                Row(
+          Column(
+            children: [
+              const SizedBox(
+                height: 30,
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -45,17 +42,21 @@ class PlayGamePage extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  flex: 3,
-                  child: PageView.builder(
-                    itemCount:
-                        onBoardController.quizInitial?.questionAndAnswer.length,
-                    controller: onBoardController.questionScrollController,
-                    itemBuilder: (context, index) {
-                      return Column(
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Expanded(
+                flex: 3,
+                child: PageView.builder(
+                  itemCount:
+                      onBoardController.quizInitial?.questionAndAnswer.length,
+                  controller: onBoardController.questionScrollController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
                         children: [
                           Container(
                             padding: const EdgeInsets.symmetric(
@@ -132,37 +133,37 @@ class PlayGamePage extends ConsumerWidget {
                             );
                           }).toList(),
                         ],
+                      ),
+                    );
+                  },
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Center(
+                  child: CustomCircularProgressIndicator(
+                    animationDuration: Duration(
+                      seconds: onBoardController.quizInitial?.duration ?? 0,
+                    ),
+                    onFinished: () {
+                      onBoardController.questionScrollController?.nextPage(
+                        duration: Duration(milliseconds: 300),
+                        curve: Curves.easeIn,
                       );
+                      var currentPage =
+                          onBoardController.questionScrollController!.page! + 1;
+                      var quantityQuestions = onBoardController
+                          .quizInitial?.questionAndAnswer.length;
+
+                      if (currentPage == quantityQuestions) {
+                        onBoardFuncions.getCorrectAnswers();
+                        context.beamToReplacementNamed('/bien-hecho');
+                      }
                     },
                   ),
                 ),
-                Expanded(
-                    flex: 1,
-                    child: Center(
-                      child: CustomCircularProgressIndicator(
-                        animationDuration: Duration(
-                          seconds: onBoardController.quizInitial?.duration ?? 0,
-                        ),
-                        onFinished: () {
-                          onBoardController.questionScrollController?.nextPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeIn,
-                          );
-                          var currentPage = onBoardController
-                                  .questionScrollController!.page! +
-                              1;
-                          var quantityQuestions = onBoardController
-                              .quizInitial?.questionAndAnswer.length;
-
-                          if (currentPage == quantityQuestions) {
-                            onBoardFuncions.getCorrectAnswers();
-                            context.beamToReplacementNamed('/bien-hecho');
-                          }
-                        },
-                      ),
-                    )),
-              ],
-            ),
+              ),
+            ],
           )
         ],
       ),

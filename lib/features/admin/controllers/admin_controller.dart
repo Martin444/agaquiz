@@ -54,14 +54,13 @@ class AdminController extends StateNotifier<AdminState> {
     );
   }
 
-  void addAnswer(int indexQuestion) {
-    if (state.quizEditable?.questionAndAnswer == null ||
-        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
+  void addAnswer(QuestionAndAnswer indexQuestion) {
+    if (state.quizEditable?.questionAndAnswer == null) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
     var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions[indexQuestion];
+    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
     var answers = currentQuestion.answers;
 
     // answers.add('Respuesta #${answers.length + 1}');
@@ -77,17 +76,31 @@ class AdminController extends StateNotifier<AdminState> {
     );
   }
 
-  void removeAnswer(int indexQuestion, AnswerModel answer) {
-    if (state.quizEditable?.questionAndAnswer == null ||
-        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
+  void removeAnswer(QuestionAndAnswer indexQuestion, AnswerModel answer) {
+    if (state.quizEditable?.questionAndAnswer == null) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
     var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions[indexQuestion];
+    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
     var answers = currentQuestion.answers;
 
     answers.remove(answer);
+
+    state = AdminState(
+      quizEditable: state.quizEditable,
+    );
+  }
+
+  void removeQuestion(QuestionAndAnswer indexQuestion) {
+    if (state.quizEditable?.questionAndAnswer == null) {
+      // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
+      return;
+    }
+    var questions = state.quizEditable!.questionAndAnswer;
+    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
+
+    questions.remove(currentQuestion);
 
     state = AdminState(
       quizEditable: state.quizEditable,
@@ -102,9 +115,9 @@ class AdminController extends StateNotifier<AdminState> {
     state.quizEditable!.duration = int.tryParse(newDuration) ?? 5;
   }
 
-  void updateIndexAnswer(int indexQuestion, AnswerModel answer) {
+  void updateIndexAnswer(QuestionAndAnswer indexQuestion, AnswerModel answer) {
     var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions[indexQuestion];
+    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
     var answerSelect =
         currentQuestion.answers.where((value) => value.id == answer.id);
 
@@ -114,35 +127,39 @@ class AdminController extends StateNotifier<AdminState> {
     );
   }
 
-  void updateQuestions(int indexQuestion, String newQuestion) {
+  void updateQuestions(QuestionAndAnswer indexQuestion, String newQuestion) {
     var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions[indexQuestion];
+    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
     currentQuestion.question = newQuestion;
   }
 
-  void updateAnswers(int indexQuestion, AnswerModel value, String newValue) {
-    if (state.quizEditable?.questionAndAnswer == null ||
-        indexQuestion >= state.quizEditable!.questionAndAnswer.length) {
+  void updateAnswers(
+      QuestionAndAnswer indexQuestion, AnswerModel value, String newValue) {
+    if (state.quizEditable?.questionAndAnswer == null) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
 
-    var currentQuestion = state.quizEditable!.questionAndAnswer[indexQuestion];
+    var currentQuestion = state.quizEditable!.questionAndAnswer
+        .firstWhere((q) => q == indexQuestion);
     var indexAnswer =
         currentQuestion.answers.indexWhere((answer) => answer.id == value.id);
 
     if (indexAnswer != -1) {
       // Si se encuentra la respuesta, actualiza su valor.
-      currentQuestion.answers[indexAnswer] =
-          AnswerModel(id: value.id, value: newValue);
+      currentQuestion.answers[indexAnswer] = AnswerModel(
+        id: value.id,
+        value: newValue,
+      );
     }
   }
 
-  void updateData() async {
+  Future<void> updateData() async {
     try {
       CollectionReference collection = fireBaseData.collection('quiz');
       DocumentReference documentRef = collection.doc('eJCxsGIDjZt0pt60mYat');
       await documentRef.update(state.quizEditable!.toJson());
+      return;
     } catch (e) {
       print('ERROR DE FIREBASE');
       print(e.toString());

@@ -4,8 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class LoginStateManage {
   TextEditingController nameController = TextEditingController();
+  String? versionRelease;
 
   String errorLogin = '';
+
+  LoginStateManage({
+    this.versionRelease,
+  });
 }
 
 final loginStateProvider =

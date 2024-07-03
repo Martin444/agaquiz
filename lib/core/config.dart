@@ -10,3 +10,5 @@ const FIRE_MESSAGING_SENDER_ID =
     String.fromEnvironment('FIRE_MESSAGING_SENDER_ID', defaultValue: "");
 const FIRE_PROYECT_ID =
     String.fromEnvironment('FIRE_PROYECT_ID', defaultValue: "");
+
+var VERSION_RELEASE = '';

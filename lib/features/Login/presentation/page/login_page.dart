@@ -1,6 +1,5 @@
 import 'package:agaquiz/core/colors/colors.dart';
 import 'package:agaquiz/core/config.dart';
-import 'package:agaquiz/core/utils/functions/aq_functions.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
 import 'package:agaquiz/features/Login/presentation/state/login_state_abs.dart';
@@ -17,7 +16,6 @@ class LoginPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var loginstate = ref.watch(loginStateProvider);
     var loginfunctions = ref.watch(loginStateProvider.notifier);
-    AqFunctions.changePageTitle('Bienvenido');
     return Title(
       color: AqColors.bg_active_error,
       title: 'Bienvenido',
@@ -86,7 +84,14 @@ class LoginPage extends ConsumerWidget {
                           load: false,
                         ),
                         const SizedBox(
-                          height: 30,
+                          height: 10,
+                        ),
+                        Text(
+                          'Versión: $VERSION_RELEASE',
+                          style: AqTextStyle.textButtonStyle1,
+                        ),
+                        const SizedBox(
+                          height: 20,
                         ),
                       ],
                     ),
