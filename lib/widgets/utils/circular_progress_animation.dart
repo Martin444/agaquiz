@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:agaquiz/core/colors/colors.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 class CustomCircularProgressIndicator extends StatefulWidget {
@@ -78,20 +79,22 @@ class _CustomCircularProgressIndicatorState
           padding: const EdgeInsets.all(8.0),
           child: Builder(
             builder: (context) {
-              return Text(
-                '$_countdownController',
-                style: AqTextStyle.primaryTextStyle,
+              return ElasticIn(
+                child: Text(
+                  '$_countdownController',
+                  style: AqTextStyle.primaryTextStyle,
+                ),
               );
             },
           ),
         ),
         _controller != null
             ? SizedBox(
-                height: 80,
-                width: 80,
+                height: 130,
+                width: 130,
                 child: CircularProgressIndicator(
                   value: _controller?.value,
-                  strokeWidth: 9.0,
+                  strokeWidth: 18.0,
                   valueColor: _colorAnimation,
                   strokeCap: StrokeCap.round,
                   // Customize other properties as needed

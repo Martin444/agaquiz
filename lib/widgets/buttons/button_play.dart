@@ -1,4 +1,5 @@
 import 'package:agaquiz/core/colors/colors.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -96,10 +97,13 @@ class _ButtonNextState extends State<ButtonNext>
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(50),
               ),
-              child: Icon(
-                Icons.play_arrow_rounded,
-                size: 54,
-                color: AqColors.icon_play_active,
+              child: Pulse(
+                infinite: true,
+                child: Icon(
+                  Icons.play_arrow_rounded,
+                  size: 54,
+                  color: AqColors.icon_play_active,
+                ),
               ),
             ),
           ),

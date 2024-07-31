@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 class TextInputPrincipal extends StatelessWidget {
   final String? hintText;
   final TextInputType? inputType;
+  final TextInputAction? inputAction;
   final TextEditingController? controller;
   final Function(String)? onChange;
+  final Function(String)? onSubmmited;
   final int? maxLines;
 
   const TextInputPrincipal({
@@ -13,6 +15,8 @@ class TextInputPrincipal extends StatelessWidget {
     @required this.inputType,
     @required this.controller,
     this.onChange,
+    this.inputAction,
+    this.onSubmmited,
     this.maxLines,
   });
 
@@ -33,7 +37,9 @@ class TextInputPrincipal extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         keyboardType: inputType,
+        textInputAction: inputAction,
         maxLines: maxLines,
+        onFieldSubmitted: onSubmmited,
         style: const TextStyle(
           fontSize: 15.0,
           fontFamily: "Poppins",
@@ -44,12 +50,6 @@ class TextInputPrincipal extends StatelessWidget {
           filled: true,
           fillColor: const Color(0xFFe5e5e5),
           border: InputBorder.none,
-          // errorText: 'Usa un nombre de jugador',
-          // errorStyle: TextStyle(
-          //   fontWeight: FontWeight.w700,
-          //   fontSize: 18,
-          //   color: AqColors.bg_active_error,
-          // ),
           hintText: hintText,
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Color(0xFFe5e5e5)),
