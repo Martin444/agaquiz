@@ -21,6 +21,8 @@ class LoginPage extends ConsumerWidget {
       color: AqColors.bg_active_error,
       title: 'Bienvenido',
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        extendBodyBehindAppBar: true,
         body: Stack(
           children: [
             const BackgroundStars(),
