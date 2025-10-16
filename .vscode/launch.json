@@ -10,8 +10,6 @@
             "type": "dart",
             "program": "lib/main.dart",
             "args": [
-                "--web-renderer",
-                "html",
                 "--dart-define=API_URL=https://api.qa.openpass.com.ar/bhubApi/1.0.0",
                 "--dart-define=ADMIN_NAME=admin19",
                 "--dart-define=COLOR_PRIMARY=#4f8a03",
