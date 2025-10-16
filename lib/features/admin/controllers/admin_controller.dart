@@ -3,13 +3,16 @@ import 'package:agaquiz/features/admin/model/qa_model.dart';
 import 'package:agaquiz/features/admin/model/quiz_model.dart';
 import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 class AdminController extends StateNotifier<AdminState> {
   AdminController() : super(AdminState()) {
     _init();
   }
   FirebaseFirestore fireBaseData = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   void _init() {
     getData();
@@ -17,7 +20,7 @@ class AdminController extends StateNotifier<AdminState> {
 
   void getData() async {
     try {
-      state = AdminState(isLoadingQuestion: true);
+      state = state.copyWith(isLoadingQuestion: true);
       CollectionReference collection = fireBaseData.collection('quiz');
       QuerySnapshot querySnapshot = await collection.get();
 
@@ -25,8 +28,7 @@ class AdminController extends StateNotifier<AdminState> {
         Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
         var quizInitialize = QuizModel.fromJson(data);
-
-        state = AdminState(
+        state = state.copyWith(
           quizInitial: quizInitialize,
           quizEditable: quizInitialize,
           isLoadingQuestion: false,
@@ -44,8 +46,7 @@ class AdminController extends StateNotifier<AdminState> {
     quizable!.add(
       QuestionAndAnswer(
         index: 0,
-        question:
-            'pregunta ${state.quizEditable!.questionAndAnswer.length + 1}',
+        question: 'pregunta ${state.quizEditable!.questionAndAnswer.length + 1}',
         answers: [],
       ),
     );
@@ -59,9 +60,9 @@ class AdminController extends StateNotifier<AdminState> {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
-    var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
-    var answers = currentQuestion.answers;
+    final questions = state.quizEditable!.questionAndAnswer;
+    final currentQuestion = questions.firstWhere((q) => q == indexQuestion);
+    final answers = currentQuestion.answers;
 
     // answers.add('Respuesta #${answers.length + 1}');
     answers.add(
@@ -70,10 +71,7 @@ class AdminController extends StateNotifier<AdminState> {
         value: 'Respuesta #${answers.length + 1}',
       ),
     );
-
-    state = AdminState(
-      quizEditable: state.quizEditable,
-    );
+    state = state.copyWith(quizEditable: state.quizEditable);
   }
 
   void removeAnswer(QuestionAndAnswer indexQuestion, AnswerModel answer) {
@@ -81,15 +79,12 @@ class AdminController extends StateNotifier<AdminState> {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
-    var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
-    var answers = currentQuestion.answers;
+    final questions = state.quizEditable!.questionAndAnswer;
+    final currentQuestion = questions.firstWhere((q) => q == indexQuestion);
+    final answers = currentQuestion.answers;
 
     answers.remove(answer);
-
-    state = AdminState(
-      quizEditable: state.quizEditable,
-    );
+    state = state.copyWith(quizEditable: state.quizEditable);
   }
 
   void removeQuestion(QuestionAndAnswer indexQuestion) {
@@ -97,14 +92,11 @@ class AdminController extends StateNotifier<AdminState> {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
-    var questions = state.quizEditable!.questionAndAnswer;
-    var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
+    final questions = state.quizEditable!.questionAndAnswer;
+    final currentQuestion = questions.firstWhere((q) => q == indexQuestion);
 
     questions.remove(currentQuestion);
-
-    state = AdminState(
-      quizEditable: state.quizEditable,
-    );
+    state = state.copyWith(quizEditable: state.quizEditable);
   }
 
   void updateDescription(String newDescription) {
@@ -118,8 +110,7 @@ class AdminController extends StateNotifier<AdminState> {
   void updateIndexAnswer(QuestionAndAnswer indexQuestion, AnswerModel answer) {
     var questions = state.quizEditable!.questionAndAnswer;
     var currentQuestion = questions.firstWhere((q) => q == indexQuestion);
-    var answerSelect =
-        currentQuestion.answers.where((value) => value.id == answer.id);
+    var answerSelect = currentQuestion.answers.where((value) => value.id == answer.id);
 
     currentQuestion.index = answerSelect.first.id;
     state = AdminState(
@@ -133,17 +124,14 @@ class AdminController extends StateNotifier<AdminState> {
     currentQuestion.question = newQuestion;
   }
 
-  void updateAnswers(
-      QuestionAndAnswer indexQuestion, AnswerModel value, String newValue) {
+  void updateAnswers(QuestionAndAnswer indexQuestion, AnswerModel value, String newValue) {
     if (state.quizEditable?.questionAndAnswer == null) {
       // Manejo de error: la lista de preguntas es nula o el índice está fuera de rango.
       return;
     }
 
-    var currentQuestion = state.quizEditable!.questionAndAnswer
-        .firstWhere((q) => q == indexQuestion);
-    var indexAnswer =
-        currentQuestion.answers.indexWhere((answer) => answer.id == value.id);
+    var currentQuestion = state.quizEditable!.questionAndAnswer.firstWhere((q) => q == indexQuestion);
+    var indexAnswer = currentQuestion.answers.indexWhere((answer) => answer.id == value.id);
 
     if (indexAnswer != -1) {
       // Si se encuentra la respuesta, actualiza su valor.
@@ -163,6 +151,33 @@ class AdminController extends StateNotifier<AdminState> {
     } catch (e) {
       print('ERROR DE FIREBASE');
       print(e.toString());
+    }
+  }
+
+  Future<void> uploadLogoAndUpdateQuiz(XFile imageFile) async {
+    try {
+      state = state.copyWith(isLoadingLogo: true);
+
+      // 1. Subir la imagen a Firebase Storage
+      final String fileName = 'logo_quiz_${DateTime.now().millisecondsSinceEpoch}';
+      final Reference storageRef = _storage.ref().child('logos/$fileName');
+      final UploadTask uploadTask = storageRef.putData(await imageFile.readAsBytes());
+      final TaskSnapshot snapshot = await uploadTask;
+
+      // 2. Obtener la URL de descarga
+      final String downloadUrl = await snapshot.ref.getDownloadURL();
+
+      // 3. Actualizar el modelo del quiz con la nueva URL del logo
+      final updatedQuiz = state.quizEditable!..logo = downloadUrl;
+
+      state = state.copyWith(quizEditable: updatedQuiz);
+
+      // 4. Persistir los cambios en Firestore
+      await updateData();
+      state = state.copyWith(isLoadingLogo: false);
+    } catch (e) {
+      print('Error al subir el logo: $e');
+      state = state.copyWith(isLoadingLogo: false);
     }
   }
 }

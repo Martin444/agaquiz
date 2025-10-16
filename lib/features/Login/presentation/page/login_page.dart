@@ -3,6 +3,7 @@ import 'package:agaquiz/core/config.dart';
 import 'package:agaquiz/core/utils/styles/font_style.dart';
 import 'package:agaquiz/core/utils/widgets/stars_background.dart';
 import 'package:agaquiz/features/Login/presentation/state/login_state_abs.dart';
+import 'package:agaquiz/features/admin/presentation/states/admin_state.dart';
 import 'package:agaquiz/widgets/buttons/button_primary.dart';
 import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
 import 'package:animate_do/animate_do.dart';
@@ -17,6 +18,7 @@ class LoginPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var loginstate = ref.watch(loginStateProvider);
     var loginfunctions = ref.watch(loginStateProvider.notifier);
+    var adminState = ref.watch(adminStateProvider);
     return Title(
       color: AqColors.bg_active_error,
       title: 'Bienvenido',
@@ -43,9 +45,15 @@ class LoginPage extends ConsumerWidget {
                             ),
                             ElasticIn(
                               delay: const Duration(milliseconds: 100),
-                              child: Image.asset(
-                                'assets/quizmalogo.png',
+                              child: SizedBox(
                                 height: 180,
+                                child: adminState.quizEditable?.logo != null
+                                    ? Image.network(
+                                        adminState.quizEditable!.logo!,
+                                        loadingBuilder: (context, child, loadingProgress) =>
+                                            loadingProgress == null ? child : const CircularProgressIndicator(),
+                                      )
+                                    : Image.asset('assets/quizmalogo.png'),
                               ),
                             ),
                             const SizedBox(

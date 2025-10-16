@@ -8,6 +8,7 @@ import 'package:agaquiz/widgets/inputs/text_input_principal.dart';
 import 'package:agaquiz/widgets/utils/aq_loader.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
 
 class AdminPage extends ConsumerWidget {
@@ -45,6 +46,86 @@ class AdminPage extends ConsumerWidget {
                                 style: AqTextStyle.primaryTextStyle,
                               ),
                             ),
+                            const SizedBox(height: 24),
+                            // --- Widget para cambiar el logo ---
+                            Column(
+                              children: [
+                                const Text(
+                                  'Logo del Quiz',
+                                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                                ),
+                                const SizedBox(height: 16),
+                                Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // Contenedor para la imagen
+                                    Container(
+                                      height: 180,
+                                      width: 180,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: Colors.grey.shade300),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: ClipRRect(
+                                        borderRadius: BorderRadius.circular(11),
+                                        child: adminController.quizEditable?.logo != null &&
+                                                adminController.quizEditable!.logo!.isNotEmpty
+                                            ? Image.network(
+                                                adminController.quizEditable!.logo!,
+                                                fit: BoxFit.cover,
+                                                loadingBuilder: (context, child, loadingProgress) {
+                                                  if (loadingProgress == null) return child;
+                                                  return const Center(child: CircularProgressIndicator());
+                                                },
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return const Icon(Icons.error_outline, color: Colors.red, size: 48);
+                                                },
+                                              )
+                                            : Image.asset(
+                                                'assets/quizmalogo.png',
+                                                fit: BoxFit.cover,
+                                              ),
+                                      ),
+                                    ),
+                                    // Indicador de carga mientras se sube el nuevo logo
+                                    if (adminController.isLoadingLogo)
+                                      Container(
+                                        height: 180,
+                                        width: 180,
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.5),
+                                          borderRadius: BorderRadius.circular(12),
+                                        ),
+                                        child: const Center(
+                                          child: CircularProgressIndicator(
+                                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                                const SizedBox(height: 16),
+                                // Botón para cambiar el logo
+                                ElevatedButton.icon(
+                                  icon: const Icon(Icons.upload_file),
+                                  label: const Text('Cambiar Logo'),
+                                  onPressed: adminController.isLoadingLogo
+                                      ? null // Deshabilita el botón mientras se carga
+                                      : () async {
+                                          // 1. Inicia el selector de imágenes
+                                          final ImagePicker picker = ImagePicker();
+                                          final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
+                                          if (image != null) {
+                                            // 2. Si se selecciona una imagen, se la pasa al controlador
+                                            await adminfunctions.uploadLogoAndUpdateQuiz(image);
+                                          }
+                                        },
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                            ),
+                            // --- Fin del widget para cambiar el logo ---
                             Expanded(
                               child: SingleChildScrollView(
                                 child: Container(
@@ -54,56 +135,44 @@ class AdminPage extends ConsumerWidget {
                                   child: Column(
                                     children: [
                                       TextInputPrincipal(
-                                        hintText:
-                                            'Escribe la descripcion del juego o las reglas',
+                                        hintText: 'Escribe la descripcion del juego o las reglas',
                                         inputType: TextInputType.multiline,
                                         controller: TextEditingController(
-                                          text: adminController
-                                              .quizEditable!.description
-                                              .toString(),
+                                          text: adminController.quizEditable!.description.toString(),
                                         ),
                                         maxLines: 4,
                                         onChange: (value) {
-                                          adminfunctions
-                                              .updateDescription(value);
+                                          adminfunctions.updateDescription(value);
                                         },
                                       ),
                                       const SizedBox(
                                         height: 20,
                                       ),
                                       TextInputPrincipal(
-                                        hintText:
-                                            'Tiempo de duración entre preguntas',
+                                        hintText: 'Tiempo de duración entre preguntas',
                                         inputType: TextInputType.number,
                                         controller: TextEditingController(
-                                          text: adminController
-                                              .quizEditable!.duration
-                                              .toString(),
+                                          text: adminController.quizEditable!.duration.toString(),
                                         ),
                                         onChange: (duration) {
-                                          adminfunctions
-                                              .updateDuration(duration);
+                                          adminfunctions.updateDuration(duration);
                                         },
                                       ),
                                       const SizedBox(
                                         height: 20,
                                       ),
-                                      ...adminController
-                                          .quizEditable!.questionAndAnswer
-                                          .map(
+                                      ...adminController.quizEditable!.questionAndAnswer.map(
                                         (question) {
                                           return Column(
                                             children: [
                                               TextInputPrincipal(
                                                 hintText: 'Escribe tu pregunta',
                                                 inputType: TextInputType.name,
-                                                controller:
-                                                    TextEditingController(
+                                                controller: TextEditingController(
                                                   text: question.question,
                                                 ),
                                                 onChange: (value) {
-                                                  adminfunctions
-                                                      .updateQuestions(
+                                                  adminfunctions.updateQuestions(
                                                     question,
                                                     value,
                                                   );
@@ -121,8 +190,7 @@ class AdminPage extends ConsumerWidget {
                                                       ),
                                                       GestureDetector(
                                                         onLongPress: () {
-                                                          adminfunctions
-                                                              .removeAnswer(
+                                                          adminfunctions.removeAnswer(
                                                             question,
                                                             answer,
                                                           );
@@ -130,37 +198,24 @@ class AdminPage extends ConsumerWidget {
                                                         child: Row(
                                                           children: [
                                                             Checkbox(
-                                                              value: answer
-                                                                      .id ==
-                                                                  question
-                                                                      .index,
-                                                              activeColor: AqColors
-                                                                  .bg_active_success,
-                                                              onChanged:
-                                                                  (state) {
-                                                                adminfunctions
-                                                                    .updateIndexAnswer(
+                                                              value: answer.id == question.index,
+                                                              activeColor: AqColors.bg_active_success,
+                                                              onChanged: (state) {
+                                                                adminfunctions.updateIndexAnswer(
                                                                   question,
                                                                   answer,
                                                                 );
                                                               },
                                                             ),
                                                             Flexible(
-                                                              child:
-                                                                  TextInputPrincipal(
-                                                                hintText:
-                                                                    'Escribe tu respuesta',
-                                                                inputType:
-                                                                    TextInputType
-                                                                        .name,
-                                                                controller:
-                                                                    TextEditingController(
-                                                                  text: answer
-                                                                      .value,
+                                                              child: TextInputPrincipal(
+                                                                hintText: 'Escribe tu respuesta',
+                                                                inputType: TextInputType.name,
+                                                                controller: TextEditingController(
+                                                                  text: answer.value,
                                                                 ),
                                                                 onChange: (p0) {
-                                                                  adminfunctions
-                                                                      .updateAnswers(
+                                                                  adminfunctions.updateAnswers(
                                                                     question,
                                                                     answer,
                                                                     p0,
@@ -179,18 +234,13 @@ class AdminPage extends ConsumerWidget {
                                                 height: 20,
                                               ),
                                               Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                 children: [
                                                   Flexible(
                                                     child: ButtonSecundary(
-                                                      title:
-                                                          'Eliminar pregunta',
+                                                      title: 'Eliminar pregunta',
                                                       onPressed: () {
-                                                        adminfunctions
-                                                            .removeQuestion(
-                                                                question);
+                                                        adminfunctions.removeQuestion(question);
                                                       },
                                                       load: false,
                                                     ),
@@ -200,12 +250,9 @@ class AdminPage extends ConsumerWidget {
                                                   ),
                                                   Flexible(
                                                     child: ButtonSecundary(
-                                                      title:
-                                                          'Agregar respuesta',
+                                                      title: 'Agregar respuesta',
                                                       onPressed: () {
-                                                        adminfunctions
-                                                            .addAnswer(
-                                                                question);
+                                                        adminfunctions.addAnswer(question);
                                                       },
                                                       load: false,
                                                     ),
@@ -218,8 +265,7 @@ class AdminPage extends ConsumerWidget {
                                               Divider(
                                                 height: 4,
                                                 thickness: 3,
-                                                color:
-                                                    AqColors.text_withe_title1,
+                                                color: AqColors.text_withe_title1,
                                               ),
                                               const SizedBox(
                                                 height: 20,
