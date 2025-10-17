@@ -151,29 +151,36 @@ class AdminController extends StateNotifier<AdminState> {
     } catch (e) {
       print('ERROR DE FIREBASE');
       print(e.toString());
+      return;
     }
   }
 
   Future<void> uploadLogoAndUpdateQuiz(XFile imageFile) async {
     try {
       state = state.copyWith(isLoadingLogo: true);
+      print('Iniciando carga de logo...');
 
       // 1. Subir la imagen a Firebase Storage
       final String fileName = 'logo_quiz_${DateTime.now().millisecondsSinceEpoch}';
       final Reference storageRef = _storage.ref().child('logos/$fileName');
       final UploadTask uploadTask = storageRef.putData(await imageFile.readAsBytes());
       final TaskSnapshot snapshot = await uploadTask;
+      print('Logo cargado, obteniendo URL de descarga...');
 
       // 2. Obtener la URL de descarga
       final String downloadUrl = await snapshot.ref.getDownloadURL();
+      print('URL de descarga obtenida: $downloadUrl');
 
       // 3. Actualizar el modelo del quiz con la nueva URL del logo
       final updatedQuiz = state.quizEditable!..logo = downloadUrl;
 
       state = state.copyWith(quizEditable: updatedQuiz);
+      print('Modelo de quiz actualizado, persistiendo cambios...');
 
       // 4. Persistir los cambios en Firestore
       await updateData();
+      print('Cambios persistidos con éxito.');
+
       state = state.copyWith(isLoadingLogo: false);
     } catch (e) {
       print('Error al subir el logo: $e');
