@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 
 class MyRouteInformationParser extends RouteInformationParser<MyRoutePath> {
   @override
-  Future<MyRoutePath> parseRouteInformation(
-      RouteInformation routeInformation) async {
+  Future<MyRoutePath> parseRouteInformation(RouteInformation routeInformation) async {
     final uri = Uri.parse(routeInformation.location);
 
     // Maneja '/'
-    if (uri.pathSegments.length == 0) {
+    if (uri.pathSegments.isEmpty) {
       return MyRoutePath.home();
     }
 

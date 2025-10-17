@@ -50,8 +50,7 @@ class PlayGamePage extends ConsumerWidget {
               Expanded(
                 flex: 3,
                 child: PageView.builder(
-                  itemCount:
-                      onBoardController.quizInitial?.questionAndAnswer.length,
+                  itemCount: onBoardController.quizInitial?.questionAndAnswer.length,
                   controller: onBoardController.questionScrollController,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
@@ -71,9 +70,7 @@ class PlayGamePage extends ConsumerWidget {
                               decoration: AqDecorators.decoratorCard1,
                               child: Center(
                                 child: Text(
-                                  onBoardController.quizInitial
-                                          ?.questionAndAnswer[index].question ??
-                                      '-',
+                                  onBoardController.quizInitial?.questionAndAnswer[index].question ?? '-',
                                   textAlign: TextAlign.center,
                                   style: AqTextStyle.textDescriptionTitle3,
                                 ),
@@ -83,15 +80,11 @@ class PlayGamePage extends ConsumerWidget {
                           const SizedBox(
                             height: 30,
                           ),
-                          ...onBoardController
-                              .quizInitial!.questionAndAnswer[index].answers
-                              .map((answer) {
+                          ...onBoardController.quizInitial!.questionAndAnswer[index].answers.map((answer) {
                             return GestureDetector(
                               onTap: () {
                                 onBoardFuncions.addResponseUser(
-                                    onBoardController
-                                        .quizInitial!.questionAndAnswer[index],
-                                    answer.id);
+                                    onBoardController.quizInitial!.questionAndAnswer[index], answer.id);
                               },
                               child: ElasticIn(
                                 delay: Duration(milliseconds: answer.id * 400),
@@ -101,11 +94,9 @@ class PlayGamePage extends ConsumerWidget {
                                     horizontal: 10,
                                     vertical: 10,
                                   ),
-                                  decoration:
-                                      AqDecorators.decoratorCard1.copyWith(
+                                  decoration: AqDecorators.decoratorCard1.copyWith(
                                     color: onBoardFuncions.isAnswerCorrect(
-                                      onBoardController.quizInitial!
-                                          .questionAndAnswer[index],
+                                      onBoardController.quizInitial!.questionAndAnswer[index],
                                       answer.id,
                                     )
                                         ? AqColors.bg_active_success
@@ -118,8 +109,7 @@ class PlayGamePage extends ConsumerWidget {
                                       ),
                                       Text(
                                         '${answer.id}',
-                                        style:
-                                            AqTextStyle.textDescriptionTitle3,
+                                        style: AqTextStyle.textDescriptionTitle3,
                                       ),
                                       Container(
                                         height: 15,
@@ -132,8 +122,7 @@ class PlayGamePage extends ConsumerWidget {
                                       Expanded(
                                         child: Text(
                                           answer.value,
-                                          style:
-                                              AqTextStyle.textDescriptionTitle3,
+                                          style: AqTextStyle.textDescriptionTitle3,
                                         ),
                                       )
                                     ],
@@ -157,13 +146,11 @@ class PlayGamePage extends ConsumerWidget {
                     ),
                     onFinished: () {
                       onBoardController.questionScrollController?.nextPage(
-                        duration: Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
                         curve: Curves.easeIn,
                       );
-                      var currentPage =
-                          onBoardController.questionScrollController!.page! + 1;
-                      var quantityQuestions = onBoardController
-                          .quizInitial?.questionAndAnswer.length;
+                      var currentPage = onBoardController.questionScrollController!.page! + 1;
+                      var quantityQuestions = onBoardController.quizInitial?.questionAndAnswer.length;
 
                       if (currentPage == quantityQuestions) {
                         onBoardFuncions.getCorrectAnswers();
