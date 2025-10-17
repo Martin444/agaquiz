@@ -117,8 +117,11 @@ class AdminPage extends ConsumerWidget {
                                           final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
                                           if (image != null) {
-                                            // 2. Si se selecciona una imagen, se la pasa al controlador
-                                            await adminfunctions.uploadLogoAndUpdateQuiz(image);
+                                            // 2. Si se selecciona una imagen, se la pasa al controlador junto con el contexto
+                                            await adminfunctions.uploadLogoAndUpdateQuiz(
+                                              image,
+                                              context: context,
+                                            );
                                           }
                                         },
                                 ),

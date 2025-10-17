@@ -78,7 +78,7 @@ class MyApp extends StatelessWidget {
 
     return ProviderScope(
       child: MaterialApp.router(
-        title: 'AgaQuiz',
+        title: 'Quizma',
         debugShowCheckedModeBanner: false,
         routeInformationParser: BeamerParser(),
         routerDelegate: routerDelegate,

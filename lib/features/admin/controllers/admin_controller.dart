@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/material.dart';
 
 class AdminController extends StateNotifier<AdminState> {
   AdminController() : super(AdminState()) {
@@ -155,36 +156,42 @@ class AdminController extends StateNotifier<AdminState> {
     }
   }
 
-  Future<void> uploadLogoAndUpdateQuiz(XFile imageFile) async {
+  /// Sube el logo y actualiza el quiz. Muestra un snackbar en caso de error.
+  Future<void> uploadLogoAndUpdateQuiz(
+    XFile imageFile, {
+    required BuildContext context,
+  }) async {
+    state = state.copyWith(isLoadingLogo: true);
     try {
-      state = state.copyWith(isLoadingLogo: true);
       print('Iniciando carga de logo...');
-
-      // 1. Subir la imagen a Firebase Storage
       final String fileName = 'logo_quiz_${DateTime.now().millisecondsSinceEpoch}';
       final Reference storageRef = _storage.ref().child('logos/$fileName');
       final UploadTask uploadTask = storageRef.putData(await imageFile.readAsBytes());
       final TaskSnapshot snapshot = await uploadTask;
       print('Logo cargado, obteniendo URL de descarga...');
-
-      // 2. Obtener la URL de descarga
       final String downloadUrl = await snapshot.ref.getDownloadURL();
       print('URL de descarga obtenida: $downloadUrl');
-
-      // 3. Actualizar el modelo del quiz con la nueva URL del logo
       final updatedQuiz = state.quizEditable!..logo = downloadUrl;
-
       state = state.copyWith(quizEditable: updatedQuiz);
       print('Modelo de quiz actualizado, persistiendo cambios...');
-
-      // 4. Persistir los cambios en Firestore
       await updateData();
       print('Cambios persistidos con éxito.');
-
-      state = state.copyWith(isLoadingLogo: false);
     } catch (e) {
       print('Error al subir el logo: $e');
+      _showErrorSnackbar(context, 'Error al subir el logo: $e');
+    } finally {
       state = state.copyWith(isLoadingLogo: false);
     }
+  }
+
+  /// Muestra un snackbar con el mensaje de error.
+  void _showErrorSnackbar(BuildContext context, String message) {
+    // Se recomienda usar ScaffoldMessenger para mostrar el snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: const Color(0xFFD32F2F), // rojo de error
+      ),
+    );
   }
 }
