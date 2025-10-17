@@ -166,7 +166,9 @@ class AdminController extends StateNotifier<AdminState> {
       print('Iniciando carga de logo...');
       final String fileName = 'logo_quiz_${DateTime.now().millisecondsSinceEpoch}';
       final Reference storageRef = _storage.ref().child('logos/$fileName');
-      final UploadTask uploadTask = storageRef.putData(await imageFile.readAsBytes());
+      print('Se guardara en $storageRef...');
+      final bytes = await imageFile.readAsBytes();
+      final UploadTask uploadTask = storageRef.putData(bytes);
       final TaskSnapshot snapshot = await uploadTask;
       print('Logo cargado, obteniendo URL de descarga...');
       final String downloadUrl = await snapshot.ref.getDownloadURL();
@@ -176,9 +178,25 @@ class AdminController extends StateNotifier<AdminState> {
       print('Modelo de quiz actualizado, persistiendo cambios...');
       await updateData();
       print('Cambios persistidos con éxito.');
-    } catch (e) {
-      print('Error al subir el logo: $e');
-      _showErrorSnackbar(context, 'Error al subir el logo: $e');
+    } on FirebaseException catch (e) {
+      print('FirebaseException al subir el logo: ${e.code} - ${e.message}');
+      if (e.message != null && e.message!.toLowerCase().contains('cors')) {
+        _showErrorSnackbar(context,
+            'Error de CORS al subir el logo. Revisa la configuración de CORS en Firebase Storage y asegúrate de que el origen y los métodos estén permitidos.');
+      } else {
+        _showErrorSnackbar(context, 'Error de Firebase al subir el logo: ${e.message ?? e.code}');
+      }
+    } on NetworkImageLoadException catch (e) {
+      print('Error de red al subir el logo: $e');
+      _showErrorSnackbar(context, 'Error de red al subir el logo. Verifica tu conexión.');
+    } on Exception catch (e) {
+      print('Error inesperado al subir el logo: $e');
+      if (e.toString().toLowerCase().contains('cors')) {
+        _showErrorSnackbar(context,
+            'Error de CORS al subir el logo. Revisa la configuración de CORS en Firebase Storage y asegúrate de que el origen y los métodos estén permitidos.');
+      } else {
+        _showErrorSnackbar(context, 'Ocurrió un error inesperado al subir el logo. Intenta nuevamente.');
+      }
     } finally {
       state = state.copyWith(isLoadingLogo: false);
     }

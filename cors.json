@@ -1,10 +1,12 @@
 [
   {
-    "origin": ["*"],
-    "method": ["GET", "POST", "PUT"],
+    "origin": ["*", "http://localhost:63791"],
+    "method": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     "responseHeader": [
       "Content-Type",
-      "x-goog-resumable"
+      "Authorization",
+      "x-goog-resumable",
+      "x-goog-meta-*"
     ],
     "maxAgeSeconds": 3600
   }
